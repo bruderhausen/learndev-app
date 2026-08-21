@@ -24,3 +24,14 @@ Se tiver pago, a confirmação é feita manualmente pelo histórico do pix, e se
 Aulas e exercicios novos chegam pelo botao de atualizar dentro do proprio
 app — nao precisa baixar o instalador de novo. So mudanca no programa em si
 pede versao nova daqui.
+
+## Telas
+
+### Início:
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/94ebcd3a-1d85-4574-a679-a7392a4b027d" />
+
+### Exercícios:
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/184786db-32ac-4e55-a1f9-e91ffefb6aa6" />
+
+### Compilador:
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/32f5d1a7-3b7e-4639-9084-2bf9d814144d" />
