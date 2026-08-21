@@ -11,10 +11,13 @@ O instalador esta em [Releases](../../releases/latest). Windows, ~156 MB.
 Ele leva o compilador junto, entao depois de instalado voce compila sem
 internet e sem instalar mais nada.
 
-## Acesso
+## Pagamento e Acesso
+
+Pagamento único: 25R$
 
 O app pede uma liberacao na primeira vez que abre. A tela mostra um codigo
-que identifica o computador; mande esse codigo para quem te passou o app.
+que identifica o computador; mande esse codigo e o nome da conta pix para quem te passou o app.
+Se tiver pago, a confirmação é feita manualmente pelo histórico do pix, e seu acesso é liberado!
 
 ## Atualizacoes
 
