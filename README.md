@@ -13,7 +13,7 @@ internet e sem instalar mais nada.
 
 ## Pagamento e Acesso
 
-Pagamento único: 25R$
+Pagamento único: R$25
 
 O app pede uma liberacao na primeira vez que abre. A tela mostra um codigo
 que identifica o computador; mande esse codigo e o nome da conta pix para quem te passou o app.
