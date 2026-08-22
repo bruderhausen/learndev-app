@@ -1,4 +1,4 @@
-# LearnDev
+# LearnDev 💻
 
 Plataforma de estudo que roda no seu computador: voce escreve C++ de verdade,
 ele compila de verdade, e os testes rodam no seu navegador. Tres trilhas —
@@ -13,7 +13,7 @@ internet e sem instalar mais nada.
 
 ## Pagamento e Acesso
 
-Pagamento único: R$25
+💵 Pagamento único: R$25
 
 O app pede uma liberacao na primeira vez que abre. A tela mostra um codigo
 que identifica o computador; mande esse codigo e o nome da conta pix para quem te passou o app.
