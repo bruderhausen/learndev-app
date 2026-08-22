@@ -30,8 +30,14 @@ pede versao nova daqui.
 ### Início:
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/94ebcd3a-1d85-4574-a679-a7392a4b027d" />
 
+Aqui o aluno seleciona cursos e visualiza o progresso atual.
+
 ### Exercícios:
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/184786db-32ac-4e55-a1f9-e91ffefb6aa6" />
 
+Nessa tela o aluno seleciona os exercícios de acordo com a matéria escolhida. Eh possivel fazer exercicios de cursos nao iniciados.
+
 ### Compilador:
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/32f5d1a7-3b7e-4639-9084-2bf9d814144d" />
+
+Essa é a tela onde o usuario resolve os exercicios proporcionados, seja os de cursos ou do banco de exercicios. Varios testes sao feitos para garantir que o codigo atinge os objetivos definidos
