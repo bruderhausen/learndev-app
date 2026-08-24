@@ -7,28 +7,28 @@
 <meta property="og:title" content="LearnDev — C++ que responde na tela">
 <meta property="og:description" content="Ponteiro, lista encadeada e árvore com o teste corrigindo na hora. E duas trilhas onde o código vira jogo.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E8A33D' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F5FD6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
 <title>LearnDev</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <style>
   :root {
-    --ground:      #100E0C;
-    --surface:     #17140F;
-    --surface-alt: #1D1913;
-    --line:        #2B2520;
-    --ink:         #ECE3D5;
-    --ink-soft:    #9C9187;
-    --accent:      #E8A33D;
-    --accent-soft: #3A290F;
-    --ember:       #E5534B;
+    --ground:      #F5F3EE;
+    --surface:     #FFFFFF;
+    --surface-alt: #EDEAE3;
+    --line:        #D8D3C8;
+    --ink:         #14181F;
+    --ink-soft:    #55606F;
+    --accent:      #1F5FD6;
+    --accent-soft: #E3EBFB;
+    --ember:       #C2650B;
 
     /* A tela é tela nos dois temas — como um bloco de código. */
-    --screen:      #0C0A09;
-    --screen-2:    #17140F;
-    --screen-line: #2B2520;
-    --screen-ink:  #ECE3D5;
-    --screen-dim:  #9C9187;
+    --screen:      #0F1626;
+    --screen-2:    #172136;
+    --screen-line: #26314A;
+    --screen-ink:  #E4E9F5;
+    --screen-dim:  #7A88A6;
 
     --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --display: "Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
@@ -36,6 +36,32 @@
 
     --pad: clamp(1.25rem, 4vw, 2.5rem);
     --wrap: 1140px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0B111C;
+      --surface:     #121A28;
+      --surface-alt: #182233;
+      --line:        #253044;
+      --ink:         #E8ECF4;
+      --ink-soft:    #97A3B8;
+      --accent:      #6C9CFF;
+      --accent-soft: #17243D;
+      --ember:       #F0A14B;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0B111C;
+    --surface:     #121A28;
+    --surface-alt: #182233;
+    --line:        #253044;
+    --ink:         #E8ECF4;
+    --ink-soft:    #97A3B8;
+    --accent:      #6C9CFF;
+    --accent-soft: #17243D;
+    --ember:       #F0A14B;
   }
 
   * { box-sizing: border-box; }
@@ -112,8 +138,6 @@
   /* ---------- hero ---------- */
 
   .hero .wrap {
-    position: relative;
-    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
     gap: clamp(2rem, 5vw, 4rem);
@@ -123,33 +147,12 @@
 
   .hero-texto { display: flex; flex-direction: column; gap: 1.5rem; }
 
-  .hero {
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1200px;
-    height: 1200px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 60%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
   .hero h1 {
     font-size: clamp(2.4rem, 5.6vw, 3.9rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
   }
   .hero h1 em {
     font-style: normal;
-    background: linear-gradient(to right, #ffc77d, var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--accent);
   }
   .hero-sub {
     font-size: 1.12rem;
@@ -177,17 +180,8 @@
   .botao:hover { transform: translateY(-1px); }
   .botao:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-  .botao-cheio { 
-    background: var(--ink); 
-    color: var(--ground); 
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--ink) 15%, transparent);
-  }
-  .botao-cheio:hover { 
-    background: var(--accent); 
-    color: #fff; 
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent);
-    transform: translateY(-2px); 
-  }
+  .botao-cheio { background: var(--ink); color: var(--ground); }
+  .botao-cheio:hover { background: var(--accent); color: #fff; }
 
   .botao-vazio { border-color: var(--line); color: var(--ink); background: transparent; }
   .botao-vazio:hover { border-color: var(--accent); color: var(--accent); }
@@ -205,7 +199,7 @@
     border: 1px solid var(--screen-line);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 40px -10px color-mix(in srgb, var(--accent) 15%, transparent);
+    box-shadow: 0 24px 60px -30px rgba(8, 14, 28, 0.55);
   }
   .tela-barra {
     display: flex;
@@ -732,7 +726,7 @@
 <footer>
   <div class="wrap">
     <span>LearnDev — plataforma de C++ e game dev.</span>
-    <span>Feito por Danilo Tosta Bruderhausem.</span>
+    <span>Feito por um aluno de Ciência da Computação.</span>
   </div>
 </footer>
 
