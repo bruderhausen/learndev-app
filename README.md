@@ -1,5 +1,7 @@
 # LearnDev 💻
 
+**💵 Pagamento único: R$25** — *O app exige ativação e confirmação manual para desbloquear após o pagamento.*
+
 Plataforma de estudo que roda no seu computador: voce escreve C++ de verdade,
 ele compila de verdade, e os testes rodam no seu navegador. Tres trilhas atualmente —
 fundamentos de C++, criacao de jogos com raylib, e Lua para Roblox. O objetivo eh expandir o maximo possivel!
