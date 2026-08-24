@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LearnDev — 43 módulos de C++, game dev e Roblox com exercício que compila e corrige na hora. Roda offline, pagamento único.">
+<meta property="og:title" content="LearnDev — C++ que responde na tela">
+<meta property="og:description" content="Ponteiro, lista encadeada e árvore com o teste corrigindo na hora. E duas trilhas onde o código vira jogo.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F5FD6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
+<title>LearnDev</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:      #F5F3EE;
+    --surface:     #FFFFFF;
+    --surface-alt: #EDEAE3;
+    --line:        #D8D3C8;
+    --ink:         #14181F;
+    --ink-soft:    #55606F;
+    --accent:      #1F5FD6;
+    --accent-soft: #E3EBFB;
+    --ember:       #C2650B;
+
+    /* A tela é tela nos dois temas — como um bloco de código. */
+    --screen:      #0F1626;
+    --screen-2:    #172136;
+    --screen-line: #26314A;
+    --screen-ink:  #E4E9F5;
+    --screen-dim:  #7A88A6;
+
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --display: "Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --pad: clamp(1.25rem, 4vw, 2.5rem);
+    --wrap: 1140px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0B111C;
+      --surface:     #121A28;
+      --surface-alt: #182233;
+      --line:        #253044;
+      --ink:         #E8ECF4;
+      --ink-soft:    #97A3B8;
+      --accent:      #6C9CFF;
+      --accent-soft: #17243D;
+      --ember:       #F0A14B;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0B111C;
+    --surface:     #121A28;
+    --surface-alt: #182233;
+    --line:        #253044;
+    --ink:         #E8ECF4;
+    --ink-soft:    #97A3B8;
+    --accent:      #6C9CFF;
+    --accent-soft: #17243D;
+    --ember:       #F0A14B;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: var(--wrap);
+    margin-inline: auto;
+    padding-inline: var(--pad);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.08;
+  }
+
+  p { margin: 0; }
+
+  a { color: inherit; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- topo ---------- */
+
+  .topo {
+    border-bottom: 1px solid var(--line);
+    background: var(--ground);
+  }
+  .topo .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.1rem;
+  }
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .marca svg { color: var(--accent); flex: none; }
+  .topo-nota {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .hero-texto { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.6vw, 3.9rem);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 1.12rem;
+    color: var(--ink-soft);
+    max-width: 46ch;
+  }
+
+  .acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.4rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+  }
+  .botao:hover { transform: translateY(-1px); }
+  .botao:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .botao-cheio { background: var(--ink); color: var(--ground); }
+  .botao-cheio:hover { background: var(--accent); color: #fff; }
+
+  .botao-vazio { border-color: var(--line); color: var(--ink); background: transparent; }
+  .botao-vazio:hover { border-color: var(--accent); color: var(--accent); }
+
+  .selo {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- a tela ---------- */
+
+  .tela {
+    background: var(--screen);
+    border: 1px solid var(--screen-line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px -30px rgba(8, 14, 28, 0.55);
+  }
+  .tela-barra {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid var(--screen-line);
+    background: var(--screen-2);
+  }
+  .bolinha { width: 10px; height: 10px; border-radius: 50%; background: var(--screen-line); }
+  .tela-nome {
+    margin-left: 0.35rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--screen-dim);
+  }
+
+  .tela-corpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+  .painel-codigo {
+    padding: 1rem 1.1rem;
+    border-right: 1px solid var(--screen-line);
+    min-height: 300px;
+  }
+  #codigo {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.75;
+    color: var(--screen-ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  #codigo .kw  { color: #7FB3FF; }
+  #codigo .fn  { color: #FFC97A; }
+  #codigo .str { color: #8FD69B; }
+  #codigo .cm  { color: var(--screen-dim); }
+  #codigo .num { color: #E39BC9; }
+
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    vertical-align: -0.15em;
+    background: var(--screen-ink);
+    animation: pisca 1s steps(2) infinite;
+  }
+  @keyframes pisca { 0%, 50% { opacity: 1; } 50.1%, 100% { opacity: 0; } }
+
+  .painel-palco {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .palco-rotulo {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--screen-dim);
+    align-self: flex-start;
+  }
+  #grade {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 1px;
+    width: 100%;
+    max-width: 232px;
+    aspect-ratio: 1;
+  }
+  #grade i {
+    background: var(--screen-2);
+    border-radius: 1px;
+    transition: background 180ms ease;
+  }
+  .status {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--screen-dim);
+    min-height: 1.2em;
+  }
+  .status b { color: #8FD69B; font-weight: 500; }
+
+  /* ---------- seções ---------- */
+
+  section { border-top: 1px solid var(--line); }
+  .bloco { padding-block: clamp(3rem, 6vw, 4.5rem); }
+  .cabeca { display: flex; flex-direction: column; gap: 0.7rem; max-width: 60ch; margin-bottom: 2.5rem; }
+  .cabeca h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); }
+  .cabeca p { color: var(--ink-soft); }
+
+  /* passos — é uma sequência de verdade, por isso numerada */
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem;
+    counter-reset: passo;
+  }
+  .passo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1.1rem;
+    border-top: 2px solid var(--accent);
+  }
+  .passo::before {
+    counter-increment: passo;
+    content: counter(passo, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+  .passo h3 { font-size: 1.08rem; font-weight: 700; }
+  .passo p { color: var(--ink-soft); font-size: 0.95rem; }
+
+  /* trilhas */
+  .trilhas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+  .trilha {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .trilha.destaque { border-color: var(--accent); }
+  .trilha-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .trilha h3 { font-size: 1.25rem; }
+  .trilha-conta { font-family: var(--mono); font-size: 0.76rem; color: var(--ink-soft); white-space: nowrap; }
+  .trilha > p { color: var(--ink-soft); font-size: 0.95rem; }
+  .modulos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .modulos li {
+    display: flex;
+    gap: 0.7rem;
+    font-size: 0.92rem;
+    padding-block: 0.35rem;
+    border-bottom: 1px dashed var(--line);
+  }
+  .modulos li:last-child { border-bottom: 0; }
+  .modulos code {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    flex: none;
+    padding-top: 0.12em;
+  }
+  .remate {
+    margin-top: auto;
+    padding: 0.9rem 1rem;
+    background: var(--accent-soft);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  .remate strong { font-family: var(--display); }
+
+  /* recursos */
+  .recursos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.75rem 2rem; }
+  .recurso { display: flex; flex-direction: column; gap: 0.45rem; }
+  .recurso h3 { font-size: 1.02rem; font-weight: 700; }
+  .recurso p { color: var(--ink-soft); font-size: 0.94rem; }
+
+  /* preço */
+  .preco-bloco { background: var(--surface-alt); }
+  .preco-caixa {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .valor { display: flex; flex-direction: column; gap: 0.9rem; }
+  .valor .cifra {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(3rem, 8vw, 4.4rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .valor .cifra span { font-size: 0.4em; color: var(--ink-soft); letter-spacing: 0; }
+  .valor .uma-vez { color: var(--ember); font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .inclui { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+  .inclui li { display: flex; gap: 0.7rem; font-size: 0.96rem; align-items: flex-start; }
+  .inclui svg { flex: none; color: var(--accent); margin-top: 0.28em; }
+
+  /* faq */
+  .faq { display: flex; flex-direction: column; gap: 0; max-width: 74ch; }
+  details {
+    border-bottom: 1px solid var(--line);
+    padding-block: 1.1rem;
+  }
+  details:first-of-type { border-top: 1px solid var(--line); }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.015em;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+";
+    font-family: var(--mono);
+    font-weight: 400;
+    color: var(--accent);
+    flex: none;
+  }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--ink-soft); font-size: 0.96rem; margin-top: 0.7rem; max-width: 66ch; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* fechamento */
+  .fechamento { text-align: center; }
+  .fechamento .cabeca { margin-inline: auto; align-items: center; text-align: center; margin-bottom: 1.75rem; }
+  .fechamento .acoes { justify-content: center; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+  }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; justify-content: space-between; }
+
+  @media (max-width: 900px) {
+    .hero .wrap { grid-template-columns: 1fr; }
+    .preco-caixa { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .tela-corpo { grid-template-columns: 1fr; }
+    .painel-codigo { border-right: 0; border-bottom: 1px solid var(--screen-line); min-height: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="wrap">
+    <a class="marca" href="#topo">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+      LearnDev
+    </a>
+    <span class="topo-nota">C++ · roda offline · sem cadastro</span>
+
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-texto">
+        <span class="eyebrow">Feito por um aluno da computação, pro pessoal do curso</span>
+        <h1>Entenda ponteiro <em>vendo</em> ele funcionar. E saia com um RPG.</h1>
+        <p class="hero-sub">
+          Ponteiro, lista encadeada, pilha, árvore binária — a matéria que mais
+          reprova, com exercício que compila e corrige na hora. Mais duas trilhas
+          onde o código vira jogo: um RPG 2D em C++ e um jogo publicado no Roblox.
+        </p>
+        <div class="acoes">
+          <a class="botao botao-cheio" href="#preco">Pegar o acesso — R$25</a>
+          <a class="botao botao-vazio" href="#trilhas">Ver os <span data-conta="total">43</span> módulos</a>
+        </div>
+        <span class="selo">Pagamento único · Vitalício · Roda no seu PC, sem internet</span>
+      </div>
+
+      <div class="tela" role="img" aria-label="Demonstração: um trecho de código C++ à esquerda desenha um coração numa grade de pixels à direita.">
+        <div class="tela-barra">
+          <span class="bolinha"></span><span class="bolinha"></span><span class="bolinha"></span>
+          <span class="tela-nome">B07 · sprites e animação — exercício 02</span>
+        </div>
+        <div class="tela-corpo">
+          <div class="painel-codigo"><pre id="codigo"></pre></div>
+          <div class="painel-palco">
+            <span class="palco-rotulo">Palco</span>
+            <div id="grade" aria-hidden="true"></div>
+            <div class="status" id="status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <span class="eyebrow">O ciclo</span>
+        <h2>Três passos, e nenhum deles é instalar coisa.</h2>
+        <p>
+          O compilador vem junto. Não existe configurar ambiente, não existe
+          <code>PATH</code> quebrado, não existe a tarde inteira perdida antes da
+          primeira linha rodar.
+        </p>
+      </div>
+      <div class="passos">
+        <div class="passo">
+          <h3>Você escreve</h3>
+          <p>C++ de verdade, no editor, com o enunciado do lado. Nada de pseudocódigo, nada de linguagem de brinquedo.</p>
+        </div>
+        <div class="passo">
+          <h3>Compila em ~3,6s</h3>
+          <p>Instantâneo quando o código não mudou. O tempo de espera não é onde o aprendizado deveria morrer.</p>
+        </div>
+        <div class="passo">
+          <h3>A tela responde</h3>
+          <p>Testes viram ✓ e ✗ com o que era esperado e o que saiu. Pixels acendem. Você vê o que o seu código fez.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trilhas">
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <span class="eyebrow"><span data-conta="total">43</span> módulos prontos, <span data-conta="trilhas">três</span> trilhas</span>
+        <h2>Uma salva a sua nota. As outras duas te dão o portfólio.</h2>
+        <p>
+          São independentes — dá pra fazer em paralelo, ou ir direto na que resolve
+          o seu problema desse semestre. Nenhuma delas espera você terminar a outra
+          pra te deixar desenhar na tela.
+        </p>
+      </div>
+      <div class="trilhas">
+
+        <div class="trilha destaque">
+          <div class="trilha-topo">
+            <h3>Trilha A — a ementa, resolvida</h3>
+            <span class="trilha-conta"><span data-conta="cpp">19</span> módulos</span>
+          </div>
+          <p>É basicamente Estrutura de Dados, só que com o exercício rodando e o teste te dizendo na hora onde quebrou.</p>
+          <ul class="modulos">
+            <li><code>A08</code> Ponteiros — o endereço como valor</li>
+            <li><code>A09</code> Alocação dinâmica e o heap</li>
+            <li><code>A11</code> Listas encadeadas</li>
+            <li><code>A12</code> Pilhas e filas</li>
+            <li><code>A13</code> Árvores binárias e recursão</li>
+            <li><code>A15</code> RAII e ponteiros inteligentes</li>
+            <li><code>A16</code> A STL — e por que ela existe</li>
+          </ul>
+          <p class="remate"><strong>Você constrói</strong> a lista, a pilha e a árvore na mão — e só então descobre a STL, que já tinha tudo pronto. Que é exatamente a ordem que a prova cobra.</p>
+        </div>
+
+        <div class="trilha">
+          <div class="trilha-topo">
+            <h3>Trilha B — o RPG em C++</h3>
+            <span class="trilha-conta"><span data-conta="gamedev">15</span> módulos</span>
+          </div>
+          <p>Não são 15 projetinhos soltos. É <strong>um jogo só</strong>, que cresce a cada módulo até virar um RPG completo.</p>
+          <ul class="modulos">
+            <li><code>B01</code> A janela e o game loop</li>
+            <li><code>B05</code> Colisão</li>
+            <li><code>B08</code> IA e máquina de estados</li>
+            <li><code>B10</code> Tilemap e o mundo maior que a tela</li>
+            <li><code>B12</code> Inventário, itens e diálogo</li>
+            <li><code>B13</code> Polimento — o <em>juice</em></li>
+            <li><code>B14</code> Capstone — o RPG inteiro</li>
+          </ul>
+          <p class="remate"><strong>No fim:</strong> um RPG 2D com combate, save, menu e mundo. A coisa que você mostra numa entrevista de estágio.</p>
+        </div>
+
+        <div class="trilha">
+          <div class="trilha-topo">
+            <h3>Trilha C — Lua e Roblox</h3>
+            <span class="trilha-conta"><span data-conta="roblox">9</span> módulos</span>
+          </div>
+          <p>A única das três em que o resultado é <strong>um jogo que outras pessoas jogam</strong>, publicado, por link.</p>
+          <ul class="modulos">
+            <li><code>C03</code> Repetição e a cilada do <code>pairs</code></li>
+            <li><code>C05</code> Tabelas — a única estrutura que Lua tem</li>
+            <li><code>C06</code> Metatables e o operador <code>:</code></li>
+            <li><code>C07</code> Classes e herança, montadas do zero</li>
+            <li><code>C08</code> A hierarquia do Roblox</li>
+            <li><code>C09</code> Script, LocalScript e ModuleScript</li>
+          </ul>
+          <p class="remate"><strong>Em construção:</strong> cliente × servidor, física, interface e save. Já inclusos no seu acesso — você não paga de novo.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <span class="eyebrow">O que vem junto</span>
+        <h2>Decisões que você só percebe quando usa.</h2>
+      </div>
+      <div class="recursos">
+        <div class="recurso">
+          <h3>Funciona sem internet</h3>
+          <p>Tudo roda na sua máquina, num processo só. Sem login, sem servidor, sem "sua sessão expirou". Wi-Fi caiu e o estudo continua.</p>
+        </div>
+        <div class="recurso">
+          <h3>Um tutor que não entrega a resposta</h3>
+          <p>Ele olha qual teste falhou, o que era esperado, o que saiu e o erro do compilador. Aí te dá uma pergunta — depois o diagnóstico, depois o conceito. Nunca o código pronto, porque isso destruiria o exercício.</p>
+        </div>
+        <div class="recurso">
+          <h3>Ele reconhece as ciladas clássicas</h3>
+          <p>Divisão inteira, off-by-one, <code>=</code> no lugar de <code>==</code>, <code>new</code> sem <code>delete</code>, erro de linker. Com certeza, não com probabilidade — porque a plataforma já sabe exatamente o que quebrou.</p>
+        </div>
+        <div class="recurso">
+          <h3>Seu código nunca sai da sua máquina</h3>
+          <p>O servidor local só compila; quem executa o programa é o seu navegador. Loop infinito trava a sua aba e mais nada.</p>
+        </div>
+        <div class="recurso">
+          <h3>Conteúdo novo chega sozinho</h3>
+          <p>Aula e exercício novos vêm num pacote de 124 KB, com um clique. Você não reinstala 300 MB pra ganhar um módulo.</p>
+        </div>
+        <div class="recurso">
+          <h3>Você paga uma vez</h3>
+          <p>Acesso vitalício, amarrado ao seu computador. Sem mensalidade, sem renovação, sem aquele e-mail dizendo que o plano mudou.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preco-bloco" id="preco">
+    <div class="wrap bloco">
+      <div class="preco-caixa">
+        <div class="valor">
+          <span class="uma-vez">Preço de colega · uma vez só</span>
+          <span class="cifra"><span>R$</span>25</span>
+          <p style="color: var(--ink-soft); font-size: 0.94rem;">
+            Menos de R$1 por módulo. Menos que o livro da bibliografia
+            que você não vai ler inteiro.
+          </p>
+          <a class="botao botao-cheio" href="https://github.com/bruderhausen/learndev-app/releases/latest/download/learndev-instalador.exe" style="align-self: flex-start;">Baixar para Windows — 165 MB</a>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin-top: -0.4rem;">
+              O Pix aparece dentro do app, com o valor já preenchido. Instale
+              primeiro: é ele que gera o código do seu computador, e é esse
+              código que eu preciso para liberar o acesso.
+            </p>
+          <p style="font-size: 0.88rem; color: var(--ink-soft);">
+            Ficou em dúvida? Me chama antes de pagar. Eu te mostro rodando na
+            minha máquina e você decide depois.
+          </p>
+        </div>
+        <ul class="inclui">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Os 43 módulos das três trilhas</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Compilador C++ e interpretador Lua já configurados</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Tutor offline, sem chave de API e sem custo por pergunta</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Todo conteúdo novo, pra sempre, sem pagar de novo</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> O RPG completo no fim — seu, pra pôr no portfólio</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Eu, do seu lado no grupo, quando travar</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <span class="eyebrow">Antes de você perguntar</span>
+        <h2>As respostas chatas, sem enrolação.</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Isso substitui a matéria?</summary>
+          <p>Não, e nem tenta. O professor te explica o conceito; aqui você senta e <em>faz</em>, com o compilador respondendo em 3 segundos e o teste apontando onde quebrou. É a parte que normalmente você faria sozinho às 2 da manhã, sem saber por que não compila.</p>
+        </details>
+        <details>
+          <summary>Por que pagar se tem C++ de graça no YouTube?</summary>
+          <p>Tem, e é bom. O que não tem lá é exercício que corrige sozinho, compilador já configurado e uma ordem que alguém pensou do começo ao fim. Vídeo te mostra alguém programando — e assistir alguém programar dá exatamente a mesma sensação de estar aprendendo, sem o aprendizado. Aqui quem digita é você.</p>
+        </details>
+        <details>
+          <summary>Por que R$25 e não de graça, já que a gente se conhece?</summary>
+          <p>Porque isso levou meses. São <span data-conta="total">43</span> módulos escritos, um compilador embutido, um tutor que funciona offline e um instalador que só funciona. Preço de colega é R$25; o preço de verdade de uma coisa desse tamanho é outro. E, sendo honesto: o que é de graça ninguém abre no dia seguinte.</p>
+        </details>
+        <details>
+          <summary>Eu já sei programar. Vou achar isso básico?</summary>
+          <p>A Trilha A vai até RAII, ponteiros inteligentes, herança, templates e lambdas — e termina num projeto de verdade, não num exercício de livro. E se você já manda bem em C++, pule direto pra Trilha B: em 15 módulos você sai com um RPG 2D completo, que é bem mais do que a maioria tem pra mostrar num processo de estágio.</p>
+        </details>
+        <details>
+          <summary>Preciso de um PC bom?</summary>
+          <p>Não. Roda em Windows, num processo só, e a compilação leva cerca de 3,6 segundos — instantâneo quando o código não mudou. Sem placa de vídeo, sem Docker, sem máquina virtual. E funciona sem internet, então o Wi-Fi da faculdade não te atrapalha.</p>
+        </details>
+        <details>
+          <summary>E se eu formatar o PC ou trocar de máquina?</summary>
+          <p>O acesso é amarrado ao computador, mas quem libera as máquinas sou eu. Trocou de PC, me chama e eu libero a nova no mesmo dia. Você comprou o acesso, não o hardware.</p>
+        </details>
+        <details>
+          <summary>E se eu travar num exercício?</summary>
+          <p>Primeiro o tutor embutido: ele olha qual teste falhou, o que era esperado, o que saiu e o erro do compilador, e te dá uma pergunta antes de dar qualquer resposta. Se mesmo assim travar, me chama. Estou no mesmo curso que você.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="fechamento">
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <h2>Passa na matéria. Sai com um jogo.</h2>
+        <p>Sem mensalidade, sem cadastro, sem internet obrigatória. Só você, o C++ e uma tela que responde na hora.</p>
+      </div>
+      <div class="acoes">
+        <a class="botao botao-cheio" href="#preco">Pegar o acesso — R$25</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>LearnDev — plataforma de C++ e game dev.</span>
+    <span>Feito por um aluno de Ciência da Computação.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var alvo = document.getElementById('codigo');
+  var grade = document.getElementById('grade');
+  var status = document.getElementById('status');
+  if (!alvo || !grade || !status) return;
+
+  var N = 16;
+  var celulas = [];
+  for (var i = 0; i < N * N; i++) {
+    var c = document.createElement('i');
+    grade.appendChild(c);
+    celulas.push(c);
+  }
+
+  // Um coração 16x16, desenhado como máscara.
+  var mascara = [
+    "0000000000000000",
+    "0001100001100000",
+    "0011110011110000",
+    "0111111111111000",
+    "0111111111111000",
+    "0111111111111000",
+    "0011111111110000",
+    "0001111111100000",
+    "0000111111000000",
+    "0000011110000000",
+    "0000001100000000",
+    "0000000000000000",
+    "0000000000000000",
+    "0000000000000000",
+    "0000000000000000",
+    "0000000000000000"
+  ];
+
+  var linhas = [
+    { t: '#include "palco.h"', c: 'cm' },
+    { t: '', c: '' },
+    { t: 'void desenhar() {', c: '' },
+    { t: '  GRADE(16, 16);', c: '' },
+    { t: '', c: '' },
+    { t: '  for (int y = 0; y < 16; y++)', c: '' },
+    { t: '    for (int x = 0; x < 16; x++)', c: '' },
+    { t: '      if (dentroDoCoracao(x, y))', c: '' },
+    { t: '        PINTAR(x, y, VERMELHO);', c: '' },
+    { t: '}', c: '' }
+  ];
+
+  var texto = linhas.map(function (l) { return l.t; }).join('\n');
+
+  function pinta(s) {
+    return s
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/(#include|void|for|int|if)\b/g, '<span class="kw">$1</span>')
+      .replace(/\b(GRADE|PINTAR|desenhar|dentroDoCoracao)\b/g, '<span class="fn">$1</span>')
+      .replace(/(&quot;palco.h&quot;|"palco\.h")/g, '<span class="str">$1</span>')
+      .replace(/\b(16|0|VERMELHO)\b/g, '<span class="num">$1</span>');
+  }
+
+  var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function limpa() {
+    for (var i = 0; i < celulas.length; i++) celulas[i].style.background = '';
+  }
+
+  function acende(aoTerminar) {
+    var pontos = [];
+    for (var y = 0; y < N; y++) {
+      for (var x = 0; x < N; x++) {
+        if (mascara[y][x] === '1') pontos.push(y * N + x);
+      }
+    }
+    var i = 0;
+    (function proximo() {
+      if (i >= pontos.length) {
+        status.innerHTML = '<b>✓ 3 de 3 testes passaram</b>';
+        if (aoTerminar) setTimeout(aoTerminar, 2600);
+        return;
+      }
+      var lote = reduzido ? pontos.length : 4;
+      for (var k = 0; k < lote && i < pontos.length; k++, i++) {
+        celulas[pontos[i]].style.background = '#E5534B';
+      }
+      setTimeout(proximo, reduzido ? 0 : 22);
+    })();
+  }
+
+  function digita(aoTerminar) {
+    var i = 0;
+    status.textContent = '';
+    limpa();
+    (function proximo() {
+      if (i > texto.length) {
+        status.textContent = 'compilando…';
+        setTimeout(function () {
+          status.textContent = 'executando';
+          acende(aoTerminar);
+        }, 900);
+        return;
+      }
+      alvo.innerHTML = pinta(texto.slice(0, i)) + '<span class="cursor"></span>';
+      i += reduzido ? texto.length : 1;
+      setTimeout(proximo, reduzido ? 0 : 22);
+    })();
+  }
+
+  function ciclo() { digita(ciclo); }
+
+  var observador = new IntersectionObserver(function (entradas) {
+    if (entradas[0].isIntersecting) {
+      observador.disconnect();
+      ciclo();
+    }
+  }, { threshold: 0.25 });
+  observador.observe(grade);
+})();
+</script>
+</body>
+</html>
