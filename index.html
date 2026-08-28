@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="LearnDev — 49 módulos de C++, game dev e Roblox com exercício que compila e corrige na hora. Roda offline, pagamento único.">
-<meta property="og:title" content="LearnDev — Codagem que responde na tela">
+<meta property="og:title" content="LearnDev — C++ que responde na tela">
 <meta property="og:description" content="Ponteiro, lista encadeada e árvore com o teste corrigindo na hora. E duas trilhas onde o código vira jogo.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E8A33D' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
@@ -295,6 +295,124 @@
   }
   .status b { color: #8FD69B; font-weight: 500; }
 
+  /* --- a janela do app, no topo -------------------------------------- */
+
+  /* A demo antiga era um editor generico ao lado de uma grade de pixels.
+     Parecia um brinquedo de codigo, e nao o programa que a pessoa vai
+     instalar. Estas classes desenham a janela do LearnDev: a marca, a
+     versao, as abas, e o painel de verificacoes que fica vermelho antes de
+     ficar verde. Quem nunca abriu o app precisa VER o app. */
+
+  .tela-marca {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: 0.35rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+  }
+  .tela-marca svg { display: block; }
+  .tela-versao {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--screen-dim);
+  }
+  .tela-abas {
+    display: flex;
+    gap: 0.85rem;
+    margin-left: 0.9rem;
+    font-size: 0.72rem;
+    color: var(--screen-dim);
+  }
+  .tela-abas .ativa { color: var(--screen-ink); }
+  .tela-barra .cresce { flex: 1; }
+
+  .tela-titulo {
+    font-size: 0.74rem;
+    color: var(--screen-dim);
+    margin: 0 0 0.6rem;
+  }
+  .tela-titulo b { color: var(--screen-ink); font-weight: 600; }
+
+  /* O painel da direita troca de conteudo entre as cenas: ora a lista de
+     verificacoes, ora a grade de pixels do jogo. */
+  .painel-palco { position: relative; }
+  .verificacoes {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    line-height: 1.5;
+  }
+  .verificacoes .linha {
+    display: flex;
+    gap: 0.45rem;
+    align-items: flex-start;
+    padding: 0.25rem 0.4rem;
+    border-radius: 4px;
+    color: var(--screen-dim);
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 0.18s, transform 0.18s;
+  }
+  .verificacoes .linha.aparece { opacity: 1; transform: none; }
+  .verificacoes .linha.ok { color: var(--screen-ink); }
+  .verificacoes .linha.ok .sinal { color: #8FD69B; }
+  .verificacoes .linha.falha {
+    color: #F0A9A4;
+    background: rgba(229, 83, 75, 0.12);
+  }
+  .verificacoes .linha.falha .sinal { color: #E5534B; }
+  .verificacoes .sinal { width: 0.9em; flex-shrink: 0; }
+
+  /* --- passo a passo da ativacao -------------------------------------- */
+
+  .ativacao {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    margin-top: 1.6rem;
+  }
+  .ativacao-passo {
+    position: relative;
+    padding: 1.1rem 1.1rem 1.1rem 3rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+  }
+  .ativacao-passo .n {
+    position: absolute;
+    left: 1rem;
+    top: 1.05rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #17140f;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .ativacao-passo h3 { margin: 0 0 0.35rem; font-size: 0.95rem; }
+  .ativacao-passo p { margin: 0; font-size: 0.85rem; color: var(--dim); }
+  .ativacao-passo code {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--ink);
+  }
+  .ativacao-nota {
+    margin-top: 1.1rem;
+    font-size: 0.86rem;
+    color: var(--dim);
+  }
+
   /* ---------- seções ---------- */
 
   section { border-top: 1px solid var(--line); }
@@ -493,16 +611,32 @@
         <span class="selo">Pagamento único · Vitalício · Roda no seu PC, sem internet</span>
       </div>
 
-      <div class="tela" role="img" aria-label="Demonstração: um trecho de código C++ à esquerda desenha um coração numa grade de pixels à direita.">
+      <div class="tela" role="img" aria-label="Demonstração do LearnDev: o aluno escreve C++ no editor à esquerda e vê, à direita, as verificações passando e os pixels do jogo acendendo.">
         <div class="tela-barra">
           <span class="bolinha"></span><span class="bolinha"></span><span class="bolinha"></span>
-          <span class="tela-nome">B07 · sprites e animação — exercício 02</span>
+          <span class="tela-marca">
+            <svg viewBox="0 0 34 24" width="26" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 6 3 12 9 18"></polyline>
+              <polyline points="25 6 31 12 25 18"></polyline>
+            </svg>
+            LearnDev
+          </span>
+          <span class="tela-versao" id="demo-versao">1.6.0</span>
+          <span class="tela-abas">
+            <span class="ativa">Início</span><span>Exercícios</span>
+          </span>
+          <span class="cresce"></span>
+          <span class="tela-nome" id="demo-nome">A11 · listas encadeadas</span>
         </div>
         <div class="tela-corpo">
-          <div class="painel-codigo"><pre id="codigo"></pre></div>
+          <div class="painel-codigo">
+            <p class="tela-titulo" id="demo-titulo"><b>Exercício 01</b> · somar a lista inteira</p>
+            <pre id="codigo"></pre>
+          </div>
           <div class="painel-palco">
-            <span class="palco-rotulo">Palco</span>
-            <div id="grade" aria-hidden="true"></div>
+            <span class="palco-rotulo" id="demo-rotulo">Verificações</span>
+            <div class="verificacoes" id="verificacoes"></div>
+            <div id="grade" aria-hidden="true" hidden></div>
             <div class="status" id="status"></div>
           </div>
         </div>
@@ -599,9 +733,12 @@
             <li><code>C06</code> Metatables e o operador <code>:</code></li>
             <li><code>C07</code> Classes e herança, montadas do zero</li>
             <li><code>C08</code> A hierarquia do Roblox</li>
-            <li><code>C09</code> Script, LocalScript e ModuleScript</li>
+            <li><code>C11</code> Cliente e servidor, e a porta entre os dois</li>
+            <li><code>C12</code> Por que não dá para confiar no cliente</li>
+            <li><code>C13</code> Salvar sem apagar o progresso de ninguém</li>
+            <li><code>C15</code> Publicar, e achar o defeito quando reclamarem</li>
           </ul>
-          <p class="remate"><strong>Em construção:</strong> cliente × servidor, física, interface e save. Já inclusos no seu acesso — você não paga de novo.</p>
+          <p class="remate"><strong>Trilha fechada:</strong> os 15 módulos estão prontos, do primeiro <code>print</code> ao jogo publicado.</p>
         </div>
 
       </div>
@@ -665,7 +802,7 @@
           </p>
         </div>
         <ul class="inclui">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Os 43 módulos das três trilhas</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Os <span data-conta="total">49</span> módulos das três trilhas</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Compilador C++ e interpretador Lua já configurados</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Tutor offline, sem chave de API e sem custo por pergunta</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Todo conteúdo novo, pra sempre, sem pagar de novo</li>
@@ -675,6 +812,61 @@
       </div>
     </div>
   </section>
+
+  <!-- Como funciona a compra, passo a passo.
+
+       Faltava, e a falta custava venda: a pessoa via o preço, não fazia ideia
+       do que acontece depois de pagar, e "não sei o que vai acontecer" é a
+       objeção mais barata de resolver e a mais cara de ignorar. -->
+  <section id="ativacao">
+    <div class="wrap bloco">
+      <div class="cabeca">
+        <span class="eyebrow">Depois do Pix</span>
+        <h2>O que acontece quando você paga.</h2>
+        <p>
+          Sem cadastro, sem senha, sem e-mail de confirmação. O programa mostra
+          um código, você manda esse código, e o acesso é liberado. Leva um
+          minuto, e o próprio app te guia por cada passo.
+        </p>
+      </div>
+
+      <div class="ativacao">
+        <div class="ativacao-passo">
+          <span class="n">1</span>
+          <h3>Baixe e instale</h3>
+          <p>Um instalador do Windows. Nada de configurar compilador — ele já vem dentro.</p>
+        </div>
+        <div class="ativacao-passo">
+          <span class="n">2</span>
+          <h3>Abra o LearnDev</h3>
+          <p>Na primeira vez ele abre a tela de liberação, com o QR do Pix e o código do seu computador — algo como <code>4D50-6688-3D8F-05A8</code>.</p>
+        </div>
+        <div class="ativacao-passo">
+          <span class="n">3</span>
+          <h3>Pague e mande o código</h3>
+          <p>R$25 no Pix, pelo QR ou pelo copia e cola. Mande o comprovante e o código do computador para quem te vendeu.</p>
+        </div>
+        <div class="ativacao-passo">
+          <span class="n">4</span>
+          <h3>Clique em verificar</h3>
+          <p>Assim que avisarem que liberou, o botão <b>Verificar acesso</b> abre o app. Daí em diante ele abre direto, para sempre.</p>
+        </div>
+      </div>
+
+      <p class="ativacao-nota">
+        <b>Por que o código do computador?</b> É o que substitui login e senha.
+        Não existe conta para criar, nem servidor guardando seus dados — o
+        acesso fica preso a essa máquina, e é por isso que o app funciona sem
+        internet depois de liberado.
+      </p>
+      <p class="ativacao-nota">
+        <b>Trocou de computador?</b> Manda o código novo. Você comprou o
+        acesso, não uma máquina.
+      </p>
+    </div>
+  </section>
+
+
 
   <section>
     <div class="wrap bloco">
@@ -737,11 +929,30 @@
 </footer>
 
 <script>
+/**
+ * A demo do topo.
+ *
+ * Ela existe por um motivo comercial, e nao decorativo: quem nunca abriu o
+ * LearnDev nao tem como saber o que ele e. Print nao mostra o ciclo, e video
+ * ninguem aperta o play. Entao a pagina mostra o app funcionando sozinho.
+ *
+ * Sao tres cenas, e a ordem importa. A primeira e a materia que reprova
+ * (lista encadeada). A segunda e o jogo, porque e o que faz querer. A
+ * terceira e Roblox, que e o que a maioria ja tentou e desistiu.
+ *
+ * A cena 1 mostra um teste FALHANDO antes de passar. E de proposito: a
+ * plataforma nao e um caderno de respostas certas, e a tela vermelha com o
+ * "esperado x obtido" e a coisa mais util que ela faz.
+ */
 (function () {
   var alvo = document.getElementById('codigo');
   var grade = document.getElementById('grade');
   var status = document.getElementById('status');
-  if (!alvo || !grade || !status) return;
+  var listaEl = document.getElementById('verificacoes');
+  var nomeEl = document.getElementById('demo-nome');
+  var tituloEl = document.getElementById('demo-titulo');
+  var rotuloEl = document.getElementById('demo-rotulo');
+  if (!alvo || !grade || !status || !listaEl) return;
 
   var N = 16;
   var celulas = [];
@@ -751,7 +962,7 @@
     celulas.push(c);
   }
 
-  // Um coração 16x16, desenhado como máscara.
+  // Um coracao 16x16, desenhado como mascara.
   var mascara = [
     "0000000000000000",
     "0001100001100000",
@@ -771,69 +982,190 @@
     "0000000000000000"
   ];
 
-  var linhas = [
-    { t: '#include "palco.h"', c: 'cm' },
-    { t: '', c: '' },
-    { t: 'void desenhar() {', c: '' },
-    { t: '  GRADE(16, 16);', c: '' },
-    { t: '', c: '' },
-    { t: '  for (int y = 0; y < 16; y++)', c: '' },
-    { t: '    for (int x = 0; x < 16; x++)', c: '' },
-    { t: '      if (dentroDoCoracao(x, y))', c: '' },
-    { t: '        PINTAR(x, y, VERMELHO);', c: '' },
-    { t: '}', c: '' }
+  var CENAS = [
+    {
+      nome: "A11 · listas encadeadas",
+      titulo: "<b>Exercício 01</b> · somar a lista inteira",
+      palco: "verificacoes",
+      rotulo: "Verificações",
+      codigo: [
+        "int somar(No* inicio) {",
+        "    int total = 0;",
+        "",
+        "    for (No* p = inicio; p != nullptr; p = p->proximo)",
+        "        total += p->valor;",
+        "",
+        "    return total;",
+        "}"
+      ].join("\n"),
+      // A primeira roda falha: e o que a plataforma faz de mais util.
+      falha: { rotulo: "lista vazia devolve 0", esperado: "0", obtido: "1" },
+      testes: [
+        "um elemento",
+        "tres elementos somam",
+        "lista vazia devolve 0",
+        "nao anda alem do ultimo",
+        "valores negativos",
+        "nao modifica a lista"
+      ]
+    },
+    {
+      nome: "B07 · sprites e animação",
+      titulo: "<b>Exercício 02</b> · desenhar o sprite na grade",
+      palco: "grade",
+      rotulo: "Palco",
+      codigo: [
+        "#include \"palco.h\"",
+        "",
+        "void desenhar() {",
+        "    GRADE(16, 16);",
+        "",
+        "    for (int y = 0; y < 16; y++)",
+        "        for (int x = 0; x < 16; x++)",
+        "            if (dentroDoCoracao(x, y))",
+        "                PINTAR(x, y, VERMELHO);",
+        "}"
+      ].join("\n"),
+      testes: null
+    },
+    {
+      nome: "C11 · cliente e servidor",
+      titulo: "<b>Exercício 01</b> · a única porta",
+      palco: "verificacoes",
+      rotulo: "Verificações",
+      codigo: [
+        "function ligarChat(porta)",
+        "    return porta.OnServerEvent:Connect(function(jogador, texto)",
+        "        porta:FireAllClients(jogador.Name .. \": \" .. texto)",
+        "    end)",
+        "end"
+      ].join("\n"),
+      testes: [
+        "a mensagem deu a volta e voltou",
+        "com o nome de quem mandou",
+        "o nome vem do jogador, nao do texto",
+        "o nome forjado NAO vira o remetente",
+        "cliente desligado nao recebe mais"
+      ]
+    }
   ];
-
-  var texto = linhas.map(function (l) { return l.t; }).join('\n');
 
   function pinta(s) {
     return s
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/(#include|void|for|int|if)\b/g, '<span class="kw">$1</span>')
-      .replace(/\b(GRADE|PINTAR|desenhar|dentroDoCoracao)\b/g, '<span class="fn">$1</span>')
-      .replace(/(&quot;palco.h&quot;|"palco\.h")/g, '<span class="str">$1</span>')
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/(#include|void|for|int|if|return|nullptr|function|end)\b/g, '<span class="kw">$1</span>')
+      .replace(/\b(GRADE|PINTAR|desenhar|dentroDoCoracao|somar|ligarChat|Connect|FireAllClients)\b/g, '<span class="fn">$1</span>')
+      .replace(/(&quot;palco\.h&quot;)/g, '<span class="str">$1</span>')
       .replace(/\b(16|0|VERMELHO)\b/g, '<span class="num">$1</span>');
   }
 
-  var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function limpa() {
-    for (var i = 0; i < celulas.length; i++) celulas[i].style.background = '';
+  function limpaGrade() {
+    for (var i = 0; i < celulas.length; i++) celulas[i].style.background = "";
   }
 
-  function acende(aoTerminar) {
+  function linha(texto, classe, sinal) {
+    var el = document.createElement("div");
+    el.className = "linha " + classe;
+    el.innerHTML = '<span class="sinal">' + sinal + "</span><span>" + texto + "</span>";
+    listaEl.appendChild(el);
+    // Um quadro de atraso para a transicao de opacidade valer.
+    requestAnimationFrame(function () { el.classList.add("aparece"); });
+    return el;
+  }
+
+  function acendeGrade(aoTerminar) {
     var pontos = [];
     for (var y = 0; y < N; y++) {
       for (var x = 0; x < N; x++) {
-        if (mascara[y][x] === '1') pontos.push(y * N + x);
+        if (mascara[y][x] === "1") pontos.push(y * N + x);
       }
     }
     var i = 0;
     (function proximo() {
       if (i >= pontos.length) {
-        status.innerHTML = '<b>✓ 3 de 3 testes passaram</b>';
-        if (aoTerminar) setTimeout(aoTerminar, 2600);
+        status.innerHTML = "<b>✓ 3 de 3 verificações passaram</b>";
+        setTimeout(aoTerminar, reduzido ? 600 : 2600);
         return;
       }
       var lote = reduzido ? pontos.length : 4;
       for (var k = 0; k < lote && i < pontos.length; k++, i++) {
-        celulas[pontos[i]].style.background = '#E5534B';
+        celulas[pontos[i]].style.background = "#E5534B";
       }
       setTimeout(proximo, reduzido ? 0 : 22);
     })();
   }
 
-  function digita(aoTerminar) {
+  function rodaTestes(cena, aoTerminar) {
+    listaEl.innerHTML = "";
+
+    // Primeira passada: uma falha, com o esperado e o obtido — que e o que a
+    // tela de verdade mostra, e o que ensina.
     var i = 0;
-    status.textContent = '';
-    limpa();
+    (function proximo() {
+      if (i >= cena.testes.length) {
+        if (cena.falha) {
+          status.innerHTML = '<b style="color:#E5534B">✗ 1 de ' + cena.testes.length + " falhou</b>";
+          setTimeout(function () { segundaPassada(cena, aoTerminar); }, reduzido ? 300 : 1600);
+        } else {
+          status.innerHTML = "<b>✓ " + cena.testes.length + " de " + cena.testes.length + " passaram</b>";
+          setTimeout(aoTerminar, reduzido ? 600 : 2800);
+        }
+        return;
+      }
+      var t = cena.testes[i];
+      var ehFalha = cena.falha && t === cena.falha.rotulo;
+      if (ehFalha) {
+        linha(t + "<br>esperado " + cena.falha.esperado + " · obtido " + cena.falha.obtido, "falha", "✗");
+      } else {
+        linha(t, "ok", "✓");
+      }
+      i++;
+      setTimeout(proximo, reduzido ? 0 : 190);
+    })();
+  }
+
+  function segundaPassada(cena, aoTerminar) {
+    // O aluno conserta a linha, e a tela fica verde inteira.
+    status.textContent = "compilando…";
+    setTimeout(function () {
+      listaEl.innerHTML = "";
+      var i = 0;
+      (function proximo() {
+        if (i >= cena.testes.length) {
+          status.innerHTML = "<b>✓ " + cena.testes.length + " de " + cena.testes.length + " passaram</b>";
+          setTimeout(aoTerminar, reduzido ? 600 : 2600);
+          return;
+        }
+        linha(cena.testes[i], "ok", "✓");
+        i++;
+        setTimeout(proximo, reduzido ? 0 : 120);
+      })();
+    }, reduzido ? 200 : 800);
+  }
+
+  function digita(cena, aoTerminar) {
+    var texto = cena.codigo;
+    var i = 0;
+    status.textContent = "";
+    listaEl.innerHTML = "";
+    limpaGrade();
+
+    nomeEl.textContent = cena.nome;
+    tituloEl.innerHTML = cena.titulo;
+    rotuloEl.textContent = cena.rotulo;
+    grade.hidden = cena.palco !== "grade";
+    listaEl.hidden = cena.palco !== "verificacoes";
+
     (function proximo() {
       if (i > texto.length) {
-        status.textContent = 'compilando…';
+        status.textContent = "compilando…";
         setTimeout(function () {
-          status.textContent = 'executando';
-          acende(aoTerminar);
-        }, 900);
+          status.textContent = "executando";
+          if (cena.palco === "grade") acendeGrade(aoTerminar);
+          else rodaTestes(cena, aoTerminar);
+        }, reduzido ? 200 : 900);
         return;
       }
       alvo.innerHTML = pinta(texto.slice(0, i)) + '<span class="cursor"></span>';
@@ -842,15 +1174,34 @@
     })();
   }
 
-  function ciclo() { digita(ciclo); }
+  var atual = 0;
+  function ciclo() {
+    var cena = CENAS[atual];
+    atual = (atual + 1) % CENAS.length;
+    digita(cena, ciclo);
+  }
+
+  // Comeca quando a demo entra na tela — e comeca de qualquer jeito depois de
+  // 1,2 s. O observador nao dispara quando a aba nasce em segundo plano nem
+  // em navegador que nao compoe a pagina, e sem esta rede o topo do site
+  // ficaria com um editor vazio para quem chega. Editor vazio na dobra de
+  // cima e pior do que animacao rodando sem ninguem ver.
+  var comecou = false;
+  function comeca() {
+    if (comecou) return;
+    comecou = true;
+    ciclo();
+  }
 
   var observador = new IntersectionObserver(function (entradas) {
     if (entradas[0].isIntersecting) {
       observador.disconnect();
-      ciclo();
+      comeca();
     }
   }, { threshold: 0.25 });
-  observador.observe(grade);
+  observador.observe(listaEl.parentNode);
+
+  setTimeout(comeca, 1200);
 })();
 </script>
 </body>
