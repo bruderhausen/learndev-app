@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LearnDev</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'></polyline><polyline points='8 6 2 12 8 18'></polyline></svg>" />
+      <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="./icone-192.png" />
+    <script type="module" crossorigin src="./assets/index-C5yAmR37.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-jlXK3gRC.css">
+  </head>
+  <body>
+    <header class="topo">
+      <a class="marca" href="#/"><svg viewBox='0 0 34 24' width='28' height='20' fill='none' stroke='var(--acento)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' style="margin-right: 6px;"><polyline points='9 6 3 12 9 18'></polyline><text x='17' y='16' font-family='var(--sans)' font-weight='800' font-size='12' fill='var(--texto)' stroke='none' text-anchor='middle'>LD</text><polyline points='25 6 31 12 25 18'></polyline></svg></a>
+
+      <!-- A versão instalada, ao lado da marca. Serve para conferir de relance
+           se a atualização pegou — sem ela, "atualizei" é fé. Some quando não
+           há versão (checkout de desenvolvimento). -->
+      <span class="versao-atual" id="versao-atual" hidden></span>
+
+      <nav class="nav" id="nav">
+        <a href="#/" data-rota="inicio">Início</a>
+        <a href="#/exercicios" data-rota="banco">Exercícios</a>
+      </nav>
+
+      <div class="cresce" id="topo-extra"></div>
+
+
+      <!-- Versão NOVA DO PROGRAMA. Diferente do botão ao lado: aquele baixa
+           conteúdo sozinho, este só avisa e manda baixar o instalador — trocar
+           o próprio executável enquanto ele roda deixa gente com instalação
+           pela metade. Só aparece quando existe versão mais nova. -->
+      <a class="botao-icone versao-nova" id="versao-nova" hidden
+         href="https://github.com/bruderhausen/learndev-app/releases/latest"
+         target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 10 10"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span id="versao-nova-texto">Versão nova</span>
+      </a>
+
+      <!-- Só aparece se houver endereço de atualização configurado e versão
+           nova disponível. Sem isso o app é offline e o botão não faz sentido. -->
+      <button class="botao-icone tem-novidade" id="atualizar" hidden
+              title="Há conteúdo novo disponível" aria-label="Atualizar conteúdo">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="8 17 12 21 16 17"></polyline>
+          <line x1="12" y1="12" x2="12" y2="21"></line>
+          <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path>
+        </svg>
+      </button>
+
+      <!-- Ajuda: cópia do progresso e relato de problema. Fica no cabeçalho
+           porque quem precisa dele está justamente numa tela que não funciona,
+           e não vai achar um link enterrado dentro dela. -->
+      <button class="botao-icone" id="abrir-suporte" title="Ajuda" aria-label="Ajuda">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </button>
+
+      <button class="botao-icone" id="abrir-tema" title="Aparência" aria-label="Aparência">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!--
+      Este bloco é a rede de segurança do boot. Ele fica visível desde o
+      primeiro instante e some assim que o main.ts assume a tela.
+
+      Se o JavaScript não subir — uma dependência faltando, um erro de sintaxe,
+      um `npm install` que ninguém rodou — o que a pessoa via era uma tela
+      preta muda, sem uma pista do que fazer. Agora ela vê o que fazer.
+    -->
+    <div id="tela" class="tela">
+      <div class="pagina" id="falha-boot">
+        <h1>O LearnDev não conseguiu iniciar</h1>
+        <p class="hero-sub">
+          A interface não carregou. Quase sempre é dependência faltando —
+          alguém baixou o projeto e ainda não instalou as bibliotecas.
+        </p>
+        <p class="hero-sub">No terminal, dentro da pasta do projeto:</p>
+        <pre><code>npm install
+npm run dev</code></pre>
+        <p class="hero-sub">
+          Se continuar assim, abra o terminal onde o servidor está rodando: a
+          mensagem de erro de verdade aparece lá, e ela diz o nome do que faltou.
+        </p>
+      </div>
+    </div>
+
+    <div class="painel-tema" id="painel-tema" hidden></div>
+    <div class="painel-tema painel-suporte" id="painel-suporte" hidden></div>
+
+  </body>
+</html>
