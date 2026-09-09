@@ -17,7 +17,14 @@
  * prenderia o app numa versão até o cache expirar.
  */
 
-const CACHE = 'learndev-v1'
+// A marca da linha abaixo e trocada pelo gerar-estatico.mjs a cada
+// publicacao — e por isso ela nao pode aparecer escrita neste comentario, ou
+// seria ela a trocada. Ela faz duas coisas ao mesmo tempo: da um cache novo para cada versao, e — mais
+// importante — deixa este arquivo BYTE-DIFERENTE do publicado antes. O
+// navegador so instala um service worker novo quando o sw.js muda; com um
+// arquivo fixo, o worker antigo ficava para sempre, e o cache dele junto.
+const VERSAO = '2026-09-09T19:22:07.495Z'
+const CACHE = 'learndev-' + VERSAO
 
 /** O mínimo para a primeira abertura offline funcionar. */
 const ESSENCIAL = ['./', './index.html', './dados.json.gz', './manifest.webmanifest']
@@ -64,7 +71,9 @@ self.addEventListener('fetch', (evento) => {
   // A página: rede primeiro, para pegar o index novo quando houver.
   if (pedido.mode === 'navigate') {
     evento.respondWith(
-      fetch(pedido)
+      // `cache: 'no-store'` porque entre a Pages e o aparelho existe um CDN, e
+      // um index guardado la fora aponta para os JS da versao anterior.
+      fetch(pedido, { cache: 'no-store' })
         .then((r) => guardar(pedido, r))
         .catch(async () => (await caches.match('./index.html')) ?? Response.error()),
     )
