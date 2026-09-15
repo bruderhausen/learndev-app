@@ -23,7 +23,7 @@
 // importante — deixa este arquivo BYTE-DIFERENTE do publicado antes. O
 // navegador so instala um service worker novo quando o sw.js muda; com um
 // arquivo fixo, o worker antigo ficava para sempre, e o cache dele junto.
-const VERSAO = '2026-09-13T20:29:04.554Z'
+const VERSAO = '2026-09-15T00:21:59.287Z'
 const CACHE = 'learndev-' + VERSAO
 
 /** O mínimo para a primeira abertura offline funcionar. */
